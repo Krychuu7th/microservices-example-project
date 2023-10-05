@@ -159,7 +159,48 @@ public class FluxMonoService {
     public Flux<String> fruitsFluxOnErrorReturn() {
         return Flux.just("Mango", "Orange")
                 .concatWith(Flux.error(new RuntimeException("Exception Occurred")))
-                .onErrorReturn("Apple");
+                .onErrorReturn("Apple").log();
+    }
+
+    public Flux<String> fruitsFluxOnErrorContinue() {
+        return Flux.just("Mango", "Orange", "Apple")
+                .map(s -> {
+                    if (s.equals("Orange")) {
+                        throw new RuntimeException("Exception Occurred");
+                    }
+                    return s.toUpperCase();
+                })
+                .onErrorContinue((e, f) -> {
+                    System.out.println("e = " + e);
+                    System.out.println("f = " + f);
+                }).log();
+    }
+
+    public Flux<String> fruitsFluxOnErrorMap() {
+        return Flux.just("Mango", "Orange", "Apple")
+                .map(s -> {
+                    if (s.equals("Orange")) {
+                        throw new RuntimeException("Exception Occurred");
+                    }
+                    return s.toUpperCase();
+                })
+                .onErrorMap(throwable -> {
+                    System.out.println("throwable = " + throwable);
+                    return new IllegalStateException("From onError Map");
+                }).log();
+    }
+
+    public Flux<String> fruitsFluxOnError() {
+        return Flux.just("Mango", "Orange", "Apple")
+                .map(s -> {
+                    if (s.equals("Orange")) {
+                        throw new RuntimeException("Exception Occurred");
+                    }
+                    return s.toUpperCase();
+                })
+                .doOnError(throwable -> {
+                    System.out.println("throwable = " + throwable);
+                }).log();
     }
 
     /*MONO*/

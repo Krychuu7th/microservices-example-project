@@ -178,6 +178,45 @@ class FluxMonoServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    void fruitsFluxOnErrorReturn() {
+        var fruitsFlux = fluxMonoService.fruitsFluxOnErrorReturn();
+
+        StepVerifier.create(fruitsFlux)
+                .expectNext("Mango", "Orange", "Apple")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxOnErrorContinue() {
+        var fruitsFlux = fluxMonoService.fruitsFluxOnErrorContinue();
+
+        StepVerifier.create(fruitsFlux)
+                .expectNext("MANGO", "APPLE")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxOnErrorMap() {
+        var fruitsFlux = fluxMonoService.fruitsFluxOnErrorMap();
+
+        StepVerifier.create(fruitsFlux)
+                .expectNext("MANGO")
+                .expectError(IllegalStateException.class)
+                .verify();
+    }
+
+    @Test
+    void fruitsFluxOnError() {
+        var fruitsFlux = fluxMonoService.fruitsFluxOnError();
+
+        StepVerifier.create(fruitsFlux)
+                .expectNext("MANGO")
+                .expectError(RuntimeException.class
+                )
+                .verify();
+    }
+
     /*MONO*/
 
     @Test
