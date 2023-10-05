@@ -1,0 +1,30 @@
+server:
+  port: 8060
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: employee-service
+          uri: lb://employee-service
+          predicates:
+            - Path=/employee/**
+        - id: department-service
+          uri: lb://department-service
+          predicates:
+            - Path=/department/**
+        - id: stream-service
+          uri: lb://stream-service
+          predicates:
+            - Path=/stream/**
+
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
