@@ -1,7 +1,9 @@
 package com.example.streamservice.service;
 
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Hooks;
 import reactor.test.StepVerifier;
+import reactor.tools.agent.ReactorDebugAgent;
 
 class FluxMonoServiceTest {
 
@@ -198,6 +200,9 @@ class FluxMonoServiceTest {
 
     @Test
     void fruitsFluxOnErrorMap() {
+//        Hooks.onOperatorDebug();
+        ReactorDebugAgent.init();
+        ReactorDebugAgent.processExistingClasses();
         var fruitsFlux = fluxMonoService.fruitsFluxOnErrorMap();
 
         StepVerifier.create(fruitsFlux)
